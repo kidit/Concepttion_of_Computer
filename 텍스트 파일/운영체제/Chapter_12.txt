@@ -1,0 +1,133 @@
+1. I/O Hardware
+
+    1. Incredible variety of I/O devices
+
+        1. Storage
+
+        2. Transmission
+
+        3. Human - interface
+
+        4. Controller
+
+            1. electronics that operate and control port, bus, devices
+
+                1. 입출력 장치와 CPU 사이의 통신을 중개하는 장치
+        
+        5. Devices have addresses, used by
+
+            1. Direct I/O instructions
+
+            2. Memory-mapped I/O
+
+                1. Device data and command registers mapped to processor address space
+
+                2. Especially for large address spaces (graphics)
+
+                3. Both memory and I/O devices use the same address space
+
+2. Interrupts
+
+    1. Interrupts handler receives Interrupts
+        
+        1. Maskable to ignore or delay some interrupts
+
+            1. it can be turned off
+
+    2. Interrupts vector to dispatch interrupt to correct handler
+
+        1. Context switch at start and end
+
+        2. based on priority
+
+        3. Some nonmaskable - reserved for events such as unrecoverable memory errors
+
+        4. Interrupt chaining if ore than one device at same interrupt number
+
+3. Direct Memory Access
+
+    1. Used to avoid programmed I/O (one byte at a time) for large data movement
+
+    2. Requires DMA Controller
+
+    3. Bypasses CPU to transfer data directly between I/O device and Memory
+
+4. Nonblocking and Asynchronous I/O
+
+    1. Blocking - process suspended until I/O completed
+
+        1. Easy to use and understand
+
+        2. Insufficient for same needs
+
+    2. Nonblocking - I/O call returns as much as available
+
+        1. User interface, data copy (buffered I/O)
+
+        2. Implemented via multi-threading
+
+        3. Returns quickly with count of bytes read or written
+
+        4. select() to find if data ready then read() or write() to transfer
+
+    3. Asynchronous - process runs while I/O executes
+
+        1. Difficult to use
+
+        2. I/O subsystem signals process when I/O completed
+
+5. Kernel I/O subsystem
+
+    1. Kernel I/O subsystem
+
+        1. Kernels provide many services related to I/O
+
+    2. Scheduling
+
+        1. Some I/O request ordering via per-device queue
+
+        2. Some OSs try fairness, priority
+
+        3. Some implement Quality Of service
+
+    3. Buffering - store data in memory while transferring between devices
+
+        1. To cope with device speed mismatch
+
+        2. To cope with device transfer size mismatch
+        
+        3. To maintain "copy semantics"
+            
+            1. 시스템 콜 시점의 데이터 유지 보장
+
+        4. Double buffering - two copies of the data
+
+            1. use two buffers to relax timing requirements
+
+                1. kernel and User
+
+                2. varying sizes
+
+                3. Full / being processed and not - full / being used
+
+                4. Copy-on-write can be used for efficiency in some cases
+        
+        5. Caching - faster device holding copy of data
+
+            1. Always just a copy
+
+            2. Key to performance
+
+            3. Sometimes combined with buffering
+
+        6. Spooling - a buffer to hold output for a device
+
+            1. coordinate concurrent output
+
+                1. if device can serve only one request at a time
+        
+        7. Device reservation - provides exclusive access to da device
+
+            1. System calls for allocation and de-allocation
+
+            2. Watch out for deadlock
